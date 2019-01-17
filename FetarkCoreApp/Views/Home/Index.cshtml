@@ -1,0 +1,81 @@
+﻿@model List<OrderVM>
+@{
+    ViewData["Title"] = "Orders";
+    int page = (int)ViewData["page"];
+    int pageSize = Constants.PageSize;
+    int ordersCount = (int)ViewData["count"];
+
+    int pagesCount = ordersCount / pageSize;
+    bool canCreateOrder = (bool)ViewData["canCreateOrder"];
+
+    pagesCount = ordersCount % pageSize > 0 ? pagesCount + 1 : pagesCount;
+    
+    int startIndex = (page / Constants.PageSize)* Constants.PageSize;
+    int endIndex = startIndex + Constants.PageSize;
+    if (endIndex > pagesCount)
+    {
+        endIndex = pagesCount;
+    }
+}
+
+
+<div class="row m-3 p-3">
+    <div class="col-md-10 mb-0 mt-0 mr-auto ml-auto">
+
+        <div class="card">
+            <ul class="list-group">
+                @if (canCreateOrder)
+                {
+                    <li class="list-group-item m-0 p-0">
+                        <div class="row">
+                            <div class="col-md-3 mb-2 mt-2 mr-auto ml-auto ">
+                                <a asp-controller="Orders" asp-action="CreateOrder" class="btn btn-dark btn-block">
+                                    Create New
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                }
+
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item m-0 p-0">
+                        <a asp-controller="Orders" asp-action="Order" asp-route-id="@item.GUID" class="btn btn-light btn-block">
+                            <p>@item.Name</p>
+                            <h4>@item.Date</h4>
+                        </a>
+                    </li>
+                }
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-6 mb-0 mt-0 mr-auto ml-auto">
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    <li class="page-item @(page==0?"disabled":"")">
+                                        <a class="page-link" href="?page=@(page-1)" tabindex="-1">Previous</a>
+                                    </li>
+                                    @for (int i = startIndex; i < endIndex; i++)
+                                    {
+                                        <li class="page-item @(page==i?"active":"")">
+                                            <a class="page-link" href="?page=@i">
+                                                @(i + 1)
+                                                @if (page == i)
+                                                {
+                                                    <span class="sr-only">(current)</span>
+                                                }
+                                            </a>
+                                        </li>
+                                    }
+                                    <li class="page-item @(page==pagesCount-1?"disabled":"")">
+                                        <a class="page-link" href="?page=@(page+1)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>

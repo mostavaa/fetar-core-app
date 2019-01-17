@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FetarkCoreApp", "FetarkCoreApp\FetarkCoreApp.csproj", "{FADF7667-BA4E-4917-93FC-1B53224F7E8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{6186E4D9-D233-4423-98F1-D8CD807A6786}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{5E6FAFD0-04A7-4AD1-A0D8-E15AA3C3F059}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FADF7667-BA4E-4917-93FC-1B53224F7E8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADF7667-BA4E-4917-93FC-1B53224F7E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADF7667-BA4E-4917-93FC-1B53224F7E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADF7667-BA4E-4917-93FC-1B53224F7E8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6186E4D9-D233-4423-98F1-D8CD807A6786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6186E4D9-D233-4423-98F1-D8CD807A6786}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6186E4D9-D233-4423-98F1-D8CD807A6786}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6186E4D9-D233-4423-98F1-D8CD807A6786}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E6FAFD0-04A7-4AD1-A0D8-E15AA3C3F059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E6FAFD0-04A7-4AD1-A0D8-E15AA3C3F059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E6FAFD0-04A7-4AD1-A0D8-E15AA3C3F059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E6FAFD0-04A7-4AD1-A0D8-E15AA3C3F059}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B53D2D02-D64F-48DA-BD16-69F7A7E5C6AB}
+	EndGlobalSection
+EndGlobal

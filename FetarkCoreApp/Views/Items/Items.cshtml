@@ -1,0 +1,62 @@
+﻿@model List<ItemVM>
+@{
+    ViewData["Title"] = "Items";
+
+    var success = ViewData["success"];
+    var error = ViewData["error"];
+}
+
+
+<div class="row m-3 p-3">
+    <div class="col-md-12 mb-0 mt-0 mr-auto ml-auto">
+        <div class="card">
+            <div class="row">
+                <div class="col-md-3 offset-4 text-center">
+                    @Html.ActionLink("Create", "Create", "Items", new { }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+            @if (error != null)
+            {
+                var errors = ((string[])error);
+                for (int i = 0; i < errors.Length; i++)
+                {
+                    <p class="alert alert-danger">@errors[i]</p>
+                }
+            }
+            @if (success != null)
+            {
+                var successMsgs = ((string[])success);
+                for (int i = 0; i < successMsgs.Length; i++)
+                {
+                    <p class="alert alert-success">@successMsgs[i]</p>
+                }
+            }
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Sub Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.SubName</td>
+                            <td>@item.Type</td>
+                            <td>@item.Price</td>
+                            <td>@Html.ActionLink("Edit", "Edit", "Items", new { id = item.GUID }, new { @class = "btn btn-secondary" }) | @Html.ActionLink("Delete", "Delete", "Items", new { id = item.GUID }, new { @class = "btn btn-danger" })</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
