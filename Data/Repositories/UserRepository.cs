@@ -21,5 +21,16 @@ namespace Data.Repositories
         {
             Add(user);
         }
+
+        public User GetByNameAndPassword(string username, string password)
+        {
+            return Get(o => o.Username == username && o.Password == password).FirstOrDefault();
+        }
+
+
+        public User GetByGuid(Guid id)
+        {
+            return Get(o => o.GUID == id).FirstOrDefault();
+        }
     }
 }

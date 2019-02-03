@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.ViewModels;
@@ -20,9 +21,12 @@ namespace FetarkCoreApp.Controllers
         }
         public IActionResult Order(Guid id)
         {
-            OrderService.GetByGuid(id)
-            return View();
+            var Order = OrderService.FullGetByGuid(id);
+             OrderService.GroupOrder(Order);
+            ViewBag.groupData = ResponseService.Data;
+            return View(Order);
         }
+
 
         public IActionResult CreateOrder()
         {
@@ -50,5 +54,58 @@ namespace FetarkCoreApp.Controllers
                 ViewData["error"] = ResponseService.Errors;
             return View(model);
         }
+
+        #region APIS
+        public IActionResult OrderTheOrder(int id, bool isChecked)
+        {
+            OrderService.OrderTheOrder(id, isChecked);
+            if (ResponseService.Status)
+                return Ok(ResponseService.Success);
+            else
+                return BadRequest(ResponseService.Errors);
+        }
+        public IActionResult ChangePayment(int id, bool isChecked)
+        {
+            OrderService.ChangePayment(id, isChecked);
+            if (ResponseService.Status)
+                return Ok(ResponseService.Success);
+            else
+                return BadRequest(ResponseService.Errors);
+        }
+        public IActionResult SaveNotes(int id, string notes)
+        {
+            OrderService.SaveNotes(id, notes);
+            if (ResponseService.Status)
+                return Ok(ResponseService.Success);
+            else
+                return BadRequest(ResponseService.Errors);
+        }
+        [Authorize]
+        public IActionResult RequestOrderItem(Guid userId, int amount, Guid itemId , string notes)
+        {
+            OrderService.RequestOrderItem(userId, amount, itemId, notes);
+            if (ResponseService.Status)
+            {
+                return Ok(ResponseService.Success);
+            }
+            else
+            {
+                return BadRequest(ResponseService.Errors);
+            }
+        }
+        [Authorize]
+        public IActionResult GetMyOrders(Guid userId)
+        {
+            OrderService.GetMyOrders(userId);
+            if (ResponseService.Status)
+            {
+                return Ok(ResponseService.Data);
+            }
+            else
+            {
+                return BadRequest(ResponseService.Errors);
+            }
+        }
+        #endregion
     }
 }

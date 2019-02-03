@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Services.ViewModels
@@ -7,8 +8,8 @@ namespace Services.ViewModels
     {
         public ItemVM()
         {
-            
             GUID = Guid.NewGuid();
+            ItemDetailsVM = new HashSet<ItemDetailsVM>();
         }
         [Required]
         public string Name { get; set; }
@@ -19,5 +20,8 @@ namespace Services.ViewModels
         public string Price { get; set; }
         public Guid GUID { get; set; }
         public int ElementId { get; set; }
+
+        public ICollection<ItemDetailsVM> ItemDetailsVM { get; set; }
+        
     }
 }

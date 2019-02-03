@@ -12,7 +12,7 @@ namespace Data.Repositories
 
         public List<Item> GetAll()
         {
-            return Get().ToList();
+            return Get().OrderBy(o=>o.Name).ToList();
         }
 
         public bool CreatedBefore( int id, string name, string subName , int type)

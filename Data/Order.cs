@@ -9,9 +9,11 @@ namespace Data
         public Order()
         {
             OrderDetails = new HashSet<OrderDetails>();
+            Ordered = false;
         }
         public string Name { get; set; }
         public ICollection<OrderDetails> OrderDetails { get; set; }
+        public bool Ordered { get; set; }
 
     }
 }

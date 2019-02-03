@@ -13,7 +13,7 @@ namespace FetarkCoreApp.Controllers
         public IItemService ItemService { get; }
         public IResponseService ResponseService { get; }
 
-        public ItemsController(IItemService itemService , IResponseService responseService)
+        public ItemsController(IItemService itemService, IResponseService responseService)
         {
             ItemService = itemService;
             ResponseService = responseService;
@@ -54,7 +54,7 @@ namespace FetarkCoreApp.Controllers
         {
             ItemVM model = ItemService.GetByGuid(id);
             if (model != null)
-                return View("Create",model);
+                return View("Create", model);
             else
                 return RedirectToAction("Items");
         }
@@ -62,7 +62,7 @@ namespace FetarkCoreApp.Controllers
         [HttpPost]
         public IActionResult Edit(ItemVM model)
         {
-                    if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 ItemService.EditItem(model);
                 ViewData.Add("success", null);
@@ -72,12 +72,12 @@ namespace FetarkCoreApp.Controllers
                 else
                     ViewData["error"] = ResponseService.Errors;
             }
-            return View("Create",model);
+            return View("Create", model);
         }
 
         public IActionResult Delete(Guid id)
         {
-            if(id!=null && id != Guid.Empty)
+            if (id != null && id != Guid.Empty)
             {
                 ItemService.Delete(id);
                 if (ResponseService.Status)
@@ -93,5 +93,20 @@ namespace FetarkCoreApp.Controllers
 
 
         }
+
+        #region APIS
+        public IActionResult GetAllItems()
+        {
+            List<ItemVM> items = ItemService.GetAll();
+            return Ok(items);
+        }
+        public IActionResult DeleteItem(Guid id)
+        {
+            ItemService.DeleteItemDetails(id);
+            if (ResponseService.Status)
+                return Ok(ResponseService.Success);
+            return BadRequest(ResponseService.Errors);
+        }
+        #endregion
     }
 }

@@ -1,0 +1,66 @@
+﻿@model List<OrderVM>
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+
+<div class="row m-3 p-3">
+    <div class="col-md-5 mb-0 mt-0 mr-auto ml-auto">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                Send Notifications
+            </div>
+            <div class="card-body p-5">
+                <div class="form form-horizontal">
+                    <div class="form-group">
+                        <label class="label " for="Title">Title</label>
+                        <input required type="text" name="Title" id="Title" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label " for="Body">Body</label>
+                        <input required type="text" name="Body" id="Body" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <input type="button" name="submit" id="submit" class="btn-block btn btn-dark" value="Send" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{ 
+    <script>
+        $(document).ready(function () {
+            function showError(msg) {
+                $("#errorModalMsg").html(msg);
+                $("#errorModal").modal("show");
+            }
+            function showSuccess(msg) {
+                $("#successModalMsg").html(msg);
+                $("#successModal").modal("show");
+            }
+            $("#submit").click(function () {
+                let title = $("#Title").val();
+                let body = $("#Body").val();
+                let Url = '@Url.Action("SendPushNotification", "Home")';
+
+                if (title && body && title != '' && body != '') {
+                    $.ajax({
+                        url: Url,
+                        data: {
+                            title: title,
+                            body: body
+                        },
+                        success: function (res) {
+                            showSuccess("Sent Successfully");
+                        }
+                    })
+                } else {
+                    showError("Please Enter Title and Body");
+                }
+            });
+        });
+             
+    </script>
+}

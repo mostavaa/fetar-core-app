@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190121090321_fixingItemDetailsIssue")]
+    partial class fixingItemDetailsIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,8 +58,6 @@ namespace Data.Migrations
 
                     b.Property<int?>("ItemId");
 
-                    b.Property<string>("Notes");
-
                     b.Property<int?>("OrderDetailsId");
 
                     b.HasKey("Id");
@@ -80,8 +80,6 @@ namespace Data.Migrations
                     b.Property<Guid>("GUID");
 
                     b.Property<string>("Name");
-
-                    b.Property<bool>("Ordered");
 
                     b.HasKey("Id");
 

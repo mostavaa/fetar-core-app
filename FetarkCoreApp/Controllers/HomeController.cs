@@ -34,13 +34,25 @@ namespace FetarkCoreApp.Controllers
             ViewData.Add("canCreateOrder", canCreateOrder);
             return View(orders);
         }
-
-
+        public IActionResult Notifications()
+        {
+            return View();
+        }
+    
     
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #region APIS
+        public IActionResult SendPushNotification(string title, string body)
+        {
+            string result = FcmService.SendNotificationFromFirebaseCloud(title, body);
+            return Ok();
+        }
+
+        #endregion
     }
 }

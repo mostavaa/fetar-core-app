@@ -15,6 +15,9 @@ using Data.Repositories;
 using AutoMapper;
 using FetarkCoreApp.Models;
 using Services;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 namespace FetarkCoreApp
 {
@@ -38,7 +41,6 @@ namespace FetarkCoreApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -46,17 +48,40 @@ namespace FetarkCoreApp
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EnableCORS", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials().Build();
+                });
+            });
 
-            services.AddDbContext<DataContext>(options =>    
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = true,
+                       ValidateAudience = true,
+                       ValidateLifetime = true,
+                       ValidateIssuerSigningKey = true,
+
+                       ValidIssuer = Constants.ValidIssuer,
+                       ValidAudience = Constants.ValidAudience,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.SymmetricSecurityKey))
+                   };
+               });
+
+            services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IItemService, ItemService>();
-            
+
             services.AddScoped<IResponseService, ResponseService>();
-            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -72,6 +97,8 @@ namespace FetarkCoreApp
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseCors("EnableCORS");
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

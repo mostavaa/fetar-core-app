@@ -32,5 +32,6 @@ namespace Services
             Errors = Success = new List<string>();
             Data = null;
         }
+       
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,8 +20,16 @@ namespace Data.Repositories
             return Get(o => o.CreationDate.Date == today).Any();
         }
 
+        public Order FindTodayOrder()
+        {
+            var today = DateTime.Now.Date;
+            return Get(o => o.CreationDate.Date == today).FirstOrDefault();
+        }
+
         public void CreateOrderToday(Order model)
         {
+            if (model.GUID == Guid.Empty)
+                model.GUID = Guid.NewGuid();
             Add(model);
         }
 
@@ -29,9 +38,19 @@ namespace Data.Repositories
             return Get().Count();
         }
 
-        public Order GetByGuid(Guid id)
+        public Order FullGetByGuid(Guid id)
         {
-            throw new NotImplementedException();
+            return Get(o => o.GUID == id).Include(o => o.OrderDetails).ThenInclude(o => o.User).Include(o => o.OrderDetails).ThenInclude(o => o.ItemDetails).ThenInclude(o => o.Item).FirstOrDefault();
+        }
+
+        public Order GetById(int id)
+        {
+            return Get(o => o.Id == id).FirstOrDefault();
+        }
+
+        public void Edit(Order item)
+        {
+            Update(item);
         }
     }
 }

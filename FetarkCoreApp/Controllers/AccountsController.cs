@@ -37,5 +37,18 @@ namespace FetarkCoreApp.Controllers
             ViewData.Add("error", null);
             return View(new UserVM());
         }
+
+        #region APIS
+        [HttpPost]
+        public IActionResult Login([FromBody]UserVM user)
+        {
+            UserService.Login(user);
+            if (ResponseService.Status)
+            {
+                return Ok(new { data = ResponseService.Data, success = ResponseService.Success });
+            }
+            return BadRequest(ResponseService.Errors);
+        }
+        #endregion
     }
 }

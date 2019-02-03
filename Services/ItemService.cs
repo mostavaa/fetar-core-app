@@ -4,6 +4,7 @@ using Data.Repositories;
 using Services.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services
@@ -15,6 +16,7 @@ namespace Services
         ItemVM GetByGuid(Guid id);
         void EditItem(ItemVM model);
         void Delete(Guid id);
+        void DeleteItemDetails(Guid id);
     }
     public class ItemService : IItemService
     {
@@ -45,7 +47,37 @@ namespace Services
             {
                 ItemsVM.Add(Mapper.Map<ItemVM>(item));
             }
-            return ItemsVM;
+            return ItemsVM.OrderBy(o => o.Name).ToList() ;
+        }
+        public void DeleteItemDetails(Guid id)
+        {
+            ResponseService.Init();
+            ItemDetails item =  UnitOfWork.ItemDetailsRepository.GetById(id);
+            if (item != null)
+            {
+                if (item.OrderDetails.Order.Ordered)
+                {
+                    ResponseService.Status = false;
+                    ResponseService.Errors.Add("Order Has Been Ordered!");
+                    return;
+                }
+                UnitOfWork.ItemDetailsRepository.Remove(item.Id);
+                if (UnitOfWork.Save() > 0)
+                {
+                    ResponseService.Status = true;
+                    ResponseService.Errors.Add("Item Deleted Successfully");
+                }
+                else
+                {
+                    ResponseService.Status = false;
+                    ResponseService.Errors.Add("Server Error");
+                }
+            }
+            else
+            {
+                ResponseService.Status = false;
+                ResponseService.Errors.Add("Item Not Found");
+            }
         }
         public void Delete(Guid id)
         {

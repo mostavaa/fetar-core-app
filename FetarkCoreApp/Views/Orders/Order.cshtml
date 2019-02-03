@@ -1,62 +1,261 @@
-﻿@{
+﻿@model OrderVM
+@{
     ViewData["Title"] = "Order";
+    decimal total = 0;
+    var groupData = (Dictionary<ItemVM, int>)ViewBag.groupData;
 }
 
+<div class="row m-2 p-2">
+    <div class="col-md-6 mb-0 mt-0 mr-auto ml-auto">
+        <div class="bg-dark card">
+            <div class="text-white card-header">
+                Summary
+            </div>
+            <div class="card-body">
+                <div class="text-white m-2">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in groupData.OrderBy(o => o.Key.Name))
+                            {
+                                <tr>
+                                    <td>@item.Key.Name - @item.Key.SubName - @item.Key.Type</td>
+                                    <td>@item.Value</td>
+                                </tr>
+                            }
 
-<div class="row m-3 p-3">
-    <div class="col-md-12 mb-0 mt-0 mr-auto ml-auto">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row m-2 p-2">
+    <div class="col-md-10 mb-0 mt-0 mr-auto ml-auto">
         <div class="card">
             <ul class="list-group ">
-                <li class="bg-dark list-group-item m-0 p-0">
-                    <div class="row">
-                        <div class="col-md-2">
+                @foreach (var item in Model.OrderDetailsVM)
+                {
+                    total = 0;
+                    <li class="bg-dark list-group-item m-0 p-0">
+                        <div class="row">
+                            <div class="col-md-2">
 
-                            <div class="text-info m-2">
-                                Mostava
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="text-white m-2">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <td>Item</td>
-                                            <td>Price</td>
-                                            <td>Amount</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Fol - eskandrani bldy</td>
-                                            <td>3.5</td>
-                                            <td>2</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                          
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="text-info m-2">
-
-                                <h6 class="d-inline">Total:</h6><p class="d-inline"> 20</p><h6 class="d-inline"> LE</h6>
-                            </div>
-                        </div>
-                        <div class="col-md-2 ">
-                            <div class="input-group pr-3 m-1">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
-                                    </div>
+                                <div class="text-info m-2">
+                                    @item.UserVM.username
                                 </div>
-                                <input value="Checked" readonly class="form-control" />
                             </div>
+                            <div class="col-md-4">
+                                <div class="text-white m-2">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td>Item</td>
+                                                <td>Price</td>
+                                                <td>Amount</td>
+                                                <td>Notes</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var itemDetails in item.ItemDetailsVM)
+                                            {
+                                                total += (itemDetails.Amount * decimal.Parse(itemDetails.ItemVM.Price));
+                                                <tr>
+                                                    <td>@itemDetails.ItemVM.Name - @itemDetails.ItemVM.SubName - @itemDetails.ItemVM.Type</td>
+                                                    <td>@itemDetails.ItemVM.Price</td>
+                                                    <td>@itemDetails.Amount</td>
+                                                    <td>@itemDetails.Notes</td>
+                                                </tr>
+                                            }
 
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-info m-2">
+
+                                    <h6 class="d-inline">Total:</h6><p class="d-inline">@total</p><h6 class="d-inline"> LE</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class="input-group pr-3 m-1">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <input class="payed-cb" onchange="" data-orderDetailsId="@item.OrderDetailsId" type="checkbox" @(item.Payed ? "checked" : "") aria-label="Checkbox for following text input">
+                                        </div>
+                                    </div>
+                                    <input value="Payed" readonly class="form-control" />
+                                </div>
+
+                            </div>
+                            <div class="col-md-2 notesParent">
+                                <textarea data-orderDetailsId="@item.OrderDetailsId" class="form-control notes-ta" placeholder="Notes">@item.Notes</textarea>
+                                <div class="success-alert row " style="display:none">
+                                    <p class="alert alert-success col-md-6 offset-3 small">Saved !</p>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
-                </li>
-                
+                    </li>
+                }
+
+
             </ul>
+
+        </div>
+    </div>
+    <div class="col-md-2 mb-0 mt-0 mr-auto ml-auto">
+        <div class="input-group pr-3 m-1">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input class="ordered-cb" data-orderId="@Model.OrderId" type="checkbox" @(Model.Ordered ? "checked" : "") aria-label="Checkbox for following text input">
+                </div>
+            </div>
+            <input value="Ordered" readonly class="form-control" />
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+
+            $(".ordered-cb").change(function () {
+                let orderId = $(this).attr("data-orderId");
+                let isChecked = $(this).is(":checked");
+                let changePaymentUrl = '@Url.Action("OrderTheOrder", "Orders")';
+                if (orderId) {
+                    $.ajax({
+                        url: changePaymentUrl,
+                        data: {
+                            id: orderId,
+                            isChecked: isChecked
+                        },
+                        success: function (res) {
+                            if (isChecked)
+                                $("#orderedModal").modal("show");
+
+                        }
+                    })
+                }
+            });
+            $(".payed-cb").change(function () {
+                let orderDetailsId = $(this).attr("data-orderDetailsId");
+                let isChecked = $(this).is(":checked");
+                let changePaymentUrl = '@Url.Action("ChangePayment", "Orders")';
+                if (orderDetailsId) {
+                    $.ajax({
+                        url: changePaymentUrl,
+                        data: {
+                            id: orderDetailsId,
+                            isChecked: isChecked
+                        },
+                        success: function (res) {
+                            $("#paymentModal").modal("show");
+                        }
+                    })
+                }
+            });
+            //setup before functions
+            var typingTimer;                //timer identifier
+            var doneTypingInterval = 3000;  //time in ms, 5 second for example
+            var input = $('.notes-ta');
+
+            //on keyup, start the countdown
+            $(input).keyup(function () {
+                clearTimeout(typingTimer);
+                var button = this;
+                typingTimer = setTimeout(function () {
+                    doneTyping(button)
+                }, doneTypingInterval);
+            })
+
+            //on keydown, clear the countdown
+            $(input).keydown(function () {
+                clearTimeout(typingTimer);
+            })
+
+            //user is "finished typing," do something
+            function doneTyping(element) {
+                var element = element;
+                let notes = $(element).val();
+                let orderDetailsId = $(element).attr("data-orderDetailsId");
+                let changePaymentUrl = '@Url.Action("SaveNotes", "Orders")';
+                if (orderDetailsId) {
+                    $.ajax({
+                        url: changePaymentUrl,
+                        data: {
+                            id: orderDetailsId,
+                            notes: notes
+                        },
+                        success: function (res) {
+                            let successAlert = $(element).parents(".notesParent").find(".success-alert");
+                            $(successAlert).fadeTo(1000, 500).fadeOut(500, function () {
+                                $(successAlert).fadeOut(500);
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+}
+<div class="modal" id="paymentModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Payment</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Successfully Changed Payment
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="orderedModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Order</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Order Created Successfully
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
 
         </div>
     </div>
